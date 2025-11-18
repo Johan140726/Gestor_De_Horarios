@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Asistencia</title>
+    <!-- Cambia ../CSS/ por ../css/ si tu carpeta está en minúsculas -->
+    <link rel="stylesheet" href="../CSS/STYLEASIS.css">
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <header class="top-bar">
+        <h1>Administrador</h1>
+        <div class="page-title">Resumen Asistencia</div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="container">
+
+        <!-- Primera fila: botones y logo -->
+        <div class="controls-row">
+            <div class="buttons-left">
+                <button class="btn registro entrada">REGISTRO<br>ENTRADA</button>
+                <button class="btn registro salida">REGISTRO<br>SALIDA</button>
+            </div>
+
+            <div class="logo-box">
+                <!-- Reemplaza la ruta por tu logo -->
+                <img src="../images/chronos_logo.png" alt="ChronosCode" class="logo">
+            </div>
+        </div>
+
+        <!-- Tabla resumen -->
+        <section class="table-wrap">
+            <table class="resumen-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Lunes</th>
+                        <th>Martes</th>
+                        <th>Miercoles</th>
+                        <th>Jueves</th>
+                        <th>Viernes</th>
+                        <th>Acumulado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Miguel Tovar</td>
+                        <td>6:00 AM</td>
+                        <td>6:05 AM</td>
+                        <td>6:00 AM</td>
+                        <td>6:00 AM</td>
+                        <td>6:00 AM</td>
+                        <td class="min">5 Min</td>
+                    </tr>
+                    <tr>
+                        <td>Camila Lozano</td>
+                        <td>6:20 AM</td>
+                        <td>6:00 AM</td>
+                        <td>6:20 AM</td>
+                        <td>6:10 AM</td>
+                        <td>6:08 AM</td>
+                        <td class="min">58 Min</td>
+                    </tr>
+                    <tr>
+                        <td>Dayana Hernandez</td>
+                        <td>6:01 AM</td>
+                        <td>6:00 AM</td>
+                        <td>6:30 AM</td>
+                        <td>6:00 AM</td>
+                        <td>6:00 AM</td>
+                        <td class="min">31 Min</td>
+                    </tr>
+                    <tr>
+                        <td>Paula Corba</td>
+                        <td>6:00 AM</td>
+                        <td>6:00 AM</td>
+                        <td>6:00 AM</td>
+                        <td>6:00 AM</td>
+                        <td>6:00 AM</td>
+                        <td class="ok">00</td>
+                    </tr>
+                    <tr>
+                        <td>Oscar Avila</td>
+                        <td>6:10 AM</td>
+                        <td>6:10 AM</td>
+                        <td>6:20 AM</td>
+                        <td>6:02 AM</td>
+                        <td>6:00 AM</td>
+                        <td class="min">42 Min</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <footer class="bottom-bar"></footer>
+
+</body>
+</html>

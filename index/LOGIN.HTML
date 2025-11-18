@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronosCode Login</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="login-box">
+
+            <img src="../img/logo.png" alt="Logo" class="logo">
+
+            <h1 class="title">CHRONOS<span>CODE</span></h1>
+            <p class="subtitle">Control de horarios facil y seguro</p>
+
+            <form onsubmit="return validarLogin()">
+                <div class="input-box">
+                    <span class="icon">@</span>
+                    <input id="email" type="email" placeholder="Correo Electronico" required>
+                </div>
+
+                <div class="input-box">
+                    <span class="icon">*</span>
+                    <input id="password" type="password" placeholder="Contraseña" required>
+                </div>
+
+                <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
+
+                <button class="btn">INGRESAR</button>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+function validarLogin() {
+    let correo = document.getElementById("email").value;
+    let pass = document.getElementById("password").value;
+
+    // Usuario administrador
+    if (correo === "admin@correo.com" && pass === "admin123") {
+        window.location.href = "ADMIN.html";
+        return false;
+    }
+
+    // Usuario empleado
+    if (correo === "empleado@correo.com" && pass === "emp123") {
+        window.location.href = "EMPLEADO1.html";
+        return false;
+    }
+
+    // Si nada coincide
+    alert("Usuario o contraseña incorrectos");
+    return false; // evita que se recargue la página
+}
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+/* ----- BARRA SUPERIOR ----- */
+:root{
+    --navy: #0a2f57;
+    --navy-dark:#07223b;
+    --accent:#3aaeee;
+    --btn-light:#8fc3f5;
+    --btn-dark:#1e66a6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;font-family: 'Poppins', Arial, sans-serif;background:#fff;color:#0b2f4a}
+
+/* Top bar */
+.top-bar{
+    background: var(--navy);
+    color: white;
+    padding: 18px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom: 6px solid rgba(0,0,0,0.06);
+}
+.top-bar h1{
+    margin:0;
+    font-size:32px;
+    font-weight:700;
+}
+.page-title{
+    font-size:20px;
+    font-weight:700;
+    opacity:0.95;
+}
+
+/* Container principal */
+.container{
+    max-width: 980px;
+    margin: 18px auto;
+    padding: 18px;
+}
+
+/* Controls row: botones y logo */
+.controls-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:18px;
+    margin-bottom: 18px;
+}
+
+/* Botones tipo pastilla grande */
+.buttons-left{
+    display:flex;
+    gap:28px;
+    align-items:center;
+}
+.btn{
+    width:200px;
+    min-height:64px;
+    border-radius:34px;
+    border: 3px solid rgba(0,0,0,0.12);
+    font-weight:700;
+    font-size:18px;
+    color:#fff;
+    padding:12px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.12);
+}
+.btn.registro.entrada{
+    background: linear-gradient(180deg, var(--btn-light), #6fb6f2);
+    color:#083b66;
+    border-color: rgba(0,0,0,0.12);
+}
+.btn.registro.salida{
+    background: linear-gradient(180deg, var(--btn-dark), #185a91);
+    color:#dbeffb;
+    border-color: rgba(0,0,0,0.14);
+}
+
+/* Logo a la derecha */
+.logo-box{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:160px;
+}
+.logo{
+    width:120px;
+    height:auto;
+    display:block;
+}
+
+/* Tabla resumen */
+.table-wrap{
+    margin-top: 6px;
+    background: #ffffff;
+    padding: 10px;
+}
+.resumen-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:16px;
+}
+.resumen-table thead th{
+    background: var(--navy-dark);
+    color:#fff;
+    padding:10px 8px;
+    border: 2px solid #0b304a;
+    text-align:left;
+}
+.resumen-table tbody td{
+    padding:10px 8px;
+    border: 1px solid #1b3a4f;
+    color:#0b2f4a;
+}
+.resumen-table tbody tr:nth-child(even){
+    background:#f7f7f7;
+}
+
+/* Estilos especiales para la columna Acumulado */
+.resumen-table td.min{
+    color:#d93025; /* rojo para minutos */
+    font-weight:700;
+    text-align:right;
+}
+.resumen-table td.ok{
+    color:#2ea24a; /* verde para 00 */
+    font-weight:700;
+    text-align:right;
+}
+
+/* Footer inferior */
+.bottom-bar{
+    height:36px;
+    background: var(--navy);
+    margin-top: 28px;
+    box-shadow: inset 0 6px 0 rgba(255,255,255,0.02);
+}
+
+/* Responsive */
+@media (max-width:820px){
+    .controls-row{flex-direction:column;align-items:center;gap:16px}
+    .buttons-left{flex-wrap:wrap;justify-content:center}
+    .btn{width:260px}
+    .logo-box{width:auto}
+    .container{padding:12px}
+    .resumen-table thead th, .resumen-table tbody td{font-size:14px}
+}

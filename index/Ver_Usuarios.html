@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Usuarios</title>
+</head>
+<body>
+
+<h2>Usuarios Registrados</h2>
+
+<button onclick="cargarUsuarios()">Mostrar Usuarios</button>
+
+<table border="1" style="margin-top:20px;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Cargo</th>
+            <th>Correo</th>
+        </tr>
+    </thead>
+    <tbody id="tablaUsuarios"></tbody>
+</table>
+
+<p id="error" style="color:red;"></p>
+
+<script>
+async function cargarUsuarios() {
+    document.getElementById("error").textContent = "";
+
+    try {
+        const respuesta = await fetch("http://localhost:3000/usuarios");
+
+        if (!respuesta.ok) {
+            throw new Error("Error en la consulta");
+        }
+
+        const usuarios = await respuesta.json();
+
+        const tabla = document.getElementById("tablaUsuarios");
+        tabla.innerHTML = "";
+
+        usuarios.forEach(u => {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${u.ID_Usuario}</td>
+                    <td>${u.Nombre_Usuario}</td>
+                    <td>${u.Cargo_Usuario}</td>
+                    <td>${u.Correo_Usuario}</td>
+                </tr>
+            `;
+        });
+
+    } catch (error) {
+        document.getElementById("error").textContent = "Error: " + error.message;
+    }
+}
+</script>
+
+</body>
+</html>

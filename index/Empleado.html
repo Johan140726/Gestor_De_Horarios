@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Empleado</title>
+  <link rel="stylesheet" href="../CSS/Style_empleado.css" />
+</head>
+<body>
+  <!-- BARRA SUPERIOR -->
+  <header class="top-bar">
+    <h1>Empleado</h1>
+    <div class="menu-icon"><div></div><div></div><div></div></div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="container">
+
+    <!-- CAMPO PARA INGRESAR EL CÓDIGO -->
+    <div class="codigo-wrapper">
+      <input id="codigoIngresado" type="text" placeholder="Código Dinámico" />
+    </div>
+
+    <!-- BOTONES -->
+    <div class="botones">
+      <button class="btn entrada" id="btnEntrada">Registrar Entrada</button>
+      <button class="btn salida" id="btnSalida">Registrar Salida</button>
+    </div>
+
+    <h2 class="titulo-historial">Historial de Asistencia</h2>
+
+    <!-- TABLA -->
+    <div class="tabla-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Hora Entrada</th>
+            <th>Hora Salida</th>
+            <th>Estado</th>
+            <th>ID Horario</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-historial"></tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <script src="./empleado.js"></script>
+</body>
+</html>

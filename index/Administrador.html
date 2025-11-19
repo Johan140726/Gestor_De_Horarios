@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrador</title>
+    <link rel="stylesheet" href="../CSS/Style_admin.css">
+
+    <style>
+        .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); z-index: 9999; }
+        .modal.active { display:flex; }
+        .card-modal { background: white; width: 720px; border-radius: 10px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .card-modal h3 { margin-bottom: 12px; color: #0A2E4E; }
+        .field { margin-bottom: 10px; display:flex; gap:10px; align-items:center; }
+        .field label { width:170px; font-weight:700; color:#0A2E4E; }
+        .field input, .field select { flex:1; padding:8px 10px; border-radius:6px; border:1px solid #ccc; }
+        .modal-actions { display:flex; justify-content:flex-end; gap:12px; margin-top:14px; }
+        .small-btn { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
+        .btn-primary { background:#0A2E4E; color:white; }
+        .btn-ghost { background:#f0f0f0; }
+    </style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <h1 class="titulo">Administrador</h1>
+</header>
+
+<section class="contenido">
+    <img src="../assets/Logo.png" class="logo">
+    <h2 class="marca">CHRONOS<span>CODE</span></h2>
+
+    <div class="botones">
+        <button class="btn">RESUMEN<br>ASISTENCIA</button>
+        <button id="btnGestion" class="btn">GESTION<br>EMPLEADOS</button>
+        <button id="btnGenerar" class="btn">GENERAR<br>CODIGO</button>
+        <button class="btn">REPORTES<br>semanales/mensuales</button>
+    </div>
+</section>
+
+
+<!-- ------------- MODAL HORARIO ---------------- -->
+<div id="modalGestion" class="modal">
+    <div class="card-modal">
+        <h3>Asignar horario semanal</h3>
+
+        <div class="field">
+            <label>Empleado</label>
+            <select id="selEmpleados"><option>Cargando...</option></select>
+        </div>
+
+        <div class="field">
+            <label>Día de la semana</label>
+            <select id="selDia">
+                <option value="">Seleccione...</option>
+                <option>Lunes</option>
+                <option>Martes</option>
+                <option>Miércoles</option>
+                <option>Jueves</option>
+                <option>Viernes</option>
+                <option>Sábado</option>
+                <option>Domingo</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Hora entrada</label>
+            <input id="inputHoraEntrada" type="time">
+        </div>
+
+        <div class="field">
+            <label>Hora salida</label>
+            <input id="inputHoraSalida" type="time">
+        </div>
+
+        <div class="modal-actions">
+            <button id="btnCerrarModal" class="small-btn btn-ghost">Cancelar</button>
+            <button id="btnGuardarHorario" class="small-btn btn-primary">Guardar Horario</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+(async function(){
+
+    const $id = id => document.getElementById(id);
+
+    const modal = $id("modalGestion");
+    const $btnGenerar = $id("btnGenerar");  // ← CORREGIDO
+
+    // Abrir modal
+    $id("btnGestion").addEventListener("click", async () => {
+        modal.classList.add("active");
+        await cargarEmpleados();
+    });
+
+    // Cerrar modal
+    $id("btnCerrarModal").addEventListener("click", () => {
+        modal.classList.remove("active");
+    });
+
+
+    // ---------------- CARGAR EMPLEADOS ----------------
+    async function cargarEmpleados(){
+        try {
+            const res = await fetch("http://localhost:3000/usuarios");
+
+            if (!res.ok) throw new Error("Error en /usuarios: " + res.status);
+
+            const data = await res.json();
+
+            $id("selEmpleados").innerHTML =
+                data.map(u => `
+                    <option value="${u.ID_Usuario}">
+                        ${u.Nombre_Usuario} - ${u.Cargo_Usuario}
+                    </option>
+                `).join("");
+
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+
+
+    // ---------------- GUARDAR HORARIO ----------------
+    $id("btnGuardarHorario").addEventListener("click", async () => {
+
+        const idUsuario = $id("selEmpleados").value;
+        const dia = $id("selDia").value;
+        const entrada = $id("inputHoraEntrada").value;
+        const salida = $id("inputHoraSalida").value;
+
+        if (!idUsuario || !dia || !entrada || !salida) {
+            return alert("Completa todos los campos");
+        }
+
+        try {
+            const res = await fetch("http://localhost:3000/crear-horario-semanal", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idUsuario, dia, entrada, salida })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.error);
+
+            alert("Horario semanal asignado correctamente");
+            modal.classList.remove("active");
+
+        } catch (err) {
+            alert("Error guardando horario: " + err.message);
+        }
+    });
+
+
+    // ---------------- GENERAR CÓDIGO ----------------
+    $btnGenerar.addEventListener("click", async () => {
+        try {
+            const res = await fetch("http://localhost:3000/generar-codigo", { method: "POST" });
+
+            if (!res.ok) throw new Error("Error " + res.status);
+
+            const data = await res.json();
+            alert("Código generado: " + data.codigo);
+
+        } catch (err) {
+            alert("Error al generar código: " + err.message);
+        }
+    });
+
+})();
+</script>
+
+</body>
+</html>

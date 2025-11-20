@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Usuario</title>
+
+    <link rel="stylesheet" href="../CSS/crear_usuario.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="form-box">
+
+            <h2>Crear Usuario</h2>
+
+            <form id="formCrearUsuario">
+
+                <div class="input-box">
+                    <label>Nombre del Usuario</label>
+                    <input type="text" id="nombre" required>
+                </div>
+
+                <div class="input-box">
+                    <label>Cargo</label>
+                    <select id="cargo" required>
+                        <option value="">Seleccione un cargo</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Empleado">Empleado</option>
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label>Correo</label>
+                    <input type="email" id="correo" required>
+                </div>
+
+                <div class="input-box">
+                    <label>Contraseña</label>
+                    <input type="password" id="contraseña" required>
+                </div>
+
+                <button class="btn" type="submit">Guardar Usuario</button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("formCrearUsuario").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const usuario = {
+                nombre: document.getElementById("nombre").value,
+                cargo: document.getElementById("cargo").value,
+                correo: document.getElementById("correo").value,
+                contraseña: document.getElementById("contraseña").value
+            };
+
+            try {
+                const respuesta = await fetch("http://localhost:3000/usuarios", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(usuario)
+                });
+
+                const data = await respuesta.json();
+
+                if (respuesta.ok) {
+                    alert("Usuario creado correctamente ✔️");
+                    window.location.href = "Login.html";
+                } else {
+                    alert("Error: " + data.error);
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert("No se pudo conectar con el servidor");
+            }
+        });
+    </script>
+
+</body>
+</html>

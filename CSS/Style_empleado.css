@@ -1,0 +1,96 @@
+/* FONDO */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: white;
+}
+
+/* BARRA SUPERIOR */
+.top-bar {
+    background: #0a3153;
+    color: white;
+    padding: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Menú */
+.menu-icon div {
+    width: 35px;
+    height: 6px;
+    background: #89a1b6;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+/* CONTENIDO */
+.container {
+    padding: 20px;
+    text-align: center;
+}
+
+/* CAMPO DE CÓDIGO */
+.codigo-wrapper input {
+    width: 70%;
+    padding: 15px;
+    font-size: 28px;
+    text-align: center;
+    border: 3px solid #d6d6d6;
+    border-radius: 50px;
+    margin: 20px 0 40px 0;
+    outline: none;
+    background: #f7f7f7;
+}
+
+/* BOTONES */
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 40px;
+}
+
+.btn {
+    width: 260px;
+    padding: 18px;
+    font-size: 22px;
+    border-radius: 50px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.entrada { background: #43a047; }
+.salida { background: #e53935; }
+
+/* TÍTULO TABLA */
+.titulo-historial {
+    text-align: left;
+    margin-left: 20px;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* TABLA */
+.table-wrapper, table {
+    width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table th {
+    background: #0a3153;
+    color: white;
+    padding: 12px;
+}
+
+table td {
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
+    font-size: 18px;
+}

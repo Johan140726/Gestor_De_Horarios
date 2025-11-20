@@ -5,59 +5,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChronosCode Login</title>
-    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet "  href="../CSS/style.css">
 </head>
 
 <body>
 
     <div class="container">
         <div class="login-box">
+            <div id="logo-header">
+                <img src="/modelado/assets/Logo.png" style="text-align: center;"  alt="Logo">
+            </div>
 
-            <img src="../img/logo.png" alt="Logo" class="logo">
+            <h2>Iniciar Sesión</h2>
 
-            <h1 class="title">CHRONOS<span>CODE</span></h1>
-            <p class="subtitle">Control de horarios facil y seguro</p>
+            <form id="formLogin">
 
-            <form onsubmit="return validarLogin()">
                 <div class="input-box">
-                    <span class="icon">@</span>
-                    <input id="email" type="email" placeholder="Correo Electronico" required>
+                    
+                    <input type="email" id="correo" placeholder="correo " required>
                 </div>
 
                 <div class="input-box">
-                    <span class="icon">*</span>
-                    <input id="password" type="password" placeholder="Contraseña" required>
+                    
+                    <input type="password" id="contraseña" placeholder="contraseña"   required>
                 </div>
 
-                <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
-
-                <button class="btn">INGRESAR</button>
+                <button class="btn" type="submit">Ingresar</button>
             </form>
+
+            <p class="crear">
+                ¿No tienes cuenta?
+                <a href="Crear_Usuario1.html">Crear Usuario</a>
+            </p>
 
         </div>
     </div>
 
     <script>
-function validarLogin() {
-    let correo = document.getElementById("email").value;
-    let pass = document.getElementById("password").value;
+document.getElementById("formLogin").addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-    // Usuario administrador
-    if (correo === "admin@correo.com" && pass === "admin123") {
-        window.location.href = "ADMIN.html";
-        return false;
+    const datos = {
+        correo: document.getElementById("correo").value,
+        contraseña: document.getElementById("contraseña").value
+    };
+
+    try {
+        const resp = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+        });
+
+        const data = await resp.json();
+        console.log("Respuesta del servidor:", data);
+
+        if (!resp.ok) {
+            alert(data.mensaje || "Error en login");
+            return;
+        }
+
+        // 🔥 Guardar el ID CORRECTAMENTE
+        localStorage.setItem("usuarioID", data.id);
+        localStorage.setItem("usuarioCargo", data.cargo);
+        localStorage.setItem("usuarioNombre", data.nombre);
+
+        // Redirección según cargo
+        if (data.cargo === "Administrador") {
+            window.location.href = "Administrador.html";
+        } else if (data.cargo === "Empleado") {
+            window.location.href = "Empleado.html";
+        } else {
+            alert("Cargo no reconocido en el sistema");
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("No se pudo conectar al servidor");
     }
-
-    // Usuario empleado
-    if (correo === "empleado@correo.com" && pass === "emp123") {
-        window.location.href = "EMPLEADO1.html";
-        return false;
-    }
-
-    // Si nada coincide
-    alert("Usuario o contraseña incorrectos");
-    return false; // evita que se recargue la página
-}
+});
 </script>
 
 

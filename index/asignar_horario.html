@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Horario</title>
+</head>
+
+<body>
+
+    <h1>Asignar Horario a Usuario</h1>
+
+    <div>
+        <input type="number" id="idUsuario" placeholder="ID Usuario" required>
+        <input type="date" id="fecha" required>
+        <input type="time" id="horaEntrada" required>
+        <input type="time" id="horaSalida" required>
+
+        <button onclick="asignarHorario()">Asignar Horario</button>
+    </div>
+
+    <p id="mensaje"></p>
+
+    <script>
+        async function asignarHorario() {
+            const datos = {
+                idUsuario: Number(document.getElementById("idUsuario").value),
+                fecha: document.getElementById("fecha").value,
+                horaEntrada: document.getElementById("horaEntrada").value,
+                horaSalida: document.getElementById("horaSalida").value
+            };
+
+            const res = await fetch("http://localhost:3000/horarios", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(datos)
+            });
+
+            const json = await res.json();
+
+            if (res.ok) {
+                document.getElementById("mensaje").innerText = "Horario asignado correctamente";
+            } else {
+                document.getElementById("mensaje").innerText = json.error || "Error asignando horario";
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Administrador - ChronosCode</title>
+
+  <!-- Estilos embebidos para reproducir la imagen -->
+  <style>
+    :root{
+      --azul-oscuro: #0A2E4E;
+      --azul-mas-oscuro: #08243A;
+      --azul-claro: #00CFEF;
+      --blanco: #ffffff;
+      --gris: #f0f2f5;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family: Arial, Helvetica, sans-serif}
+
+    body{
+      background: #fff;
+      color:#102028;
+    }
+
+    /* Barra superior */
+    .header {
+      background: var(--azul-oscuro);
+      color: var(--blanco);
+      height: 84px;
+      display:flex;
+      align-items:center;
+      padding: 0 18px;
+      border-bottom: 6px solid var(--azul-claro);
+    }
+
+    .header .left {
+      flex:1;
+      padding-left: 12px;
+    }
+
+    .header h1 {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      margin-left: 6px;
+    }
+
+    .header .menu {
+      width:84px;
+      text-align:right;
+    }
+
+    .menu-btn {
+      width:46px;
+      height:46px;
+      background: rgba(255,255,255,0.14);
+      border-radius:8px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      border: 4px solid rgba(255,255,255,0.06);
+    }
+
+    .menu-btn .line{ width:22px; height:4px; background: rgba(255,255,255,0.7); margin:3px 0; border-radius:4px; }
+
+    /* Contenido principal */
+    .main {
+      padding: 28px 36px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    .logo-area {
+      width:500px;
+      text-align:center;
+      padding: 18px 0 30px 0;
+    }
+
+    .logo-area img{ width:120px; height:auto; display:block; margin: 0 auto 8px auto; }
+    .logo-area .brand { font-weight:700; color: var(--azul-oscuro); font-size:22px; margin-top:8px; }
+    .logo-area .brand span { color: var(--azul-claro); font-weight:800; }
+
+    /* Botones grandes */
+    .grid {
+      width:100%;
+      max-width:980px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-top: 22px;
+    }
+
+    .big-btn {
+      background: var(--azul-oscuro);
+      color: #fff;
+      padding: 22px 12px;
+      border-radius: 28px;
+      font-size:20px;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+      cursor:pointer;
+      min-height:86px;
+      text-align:center;
+      line-height:1.05;
+    }
+
+    .big-btn.secondary {
+      background: linear-gradient(180deg, rgba(10,46,78,0.98), rgba(8,36,58,0.97));
+    }
+
+    /* Footer azul inferior (igual que la imagen) */
+    .bottom-band {
+      height:36px;
+      width:100%;
+      background: var(--azul-oscuro);
+      margin-top: 36px;
+      border-top: 6px solid var(--azul-claro);
+    }
+
+    /* Modal (centrado) */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: rgba(0,0,0,0.45);
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .modal.active { display:flex; }
+
+    .modal-card {
+      width: 760px;
+      background: white;
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 18px 36px rgba(0,0,0,0.35);
+    }
+
+    .modal-card h3 { color:var(--azul-oscuro); margin-bottom:12px; }
+
+    .row { display:flex; gap:12px; margin-top:10px; }
+    .col { flex:1; display:flex; flex-direction:column; }
+    label { font-weight:700; color:var(--azul-oscuro); margin-bottom:6px; font-size:14px; }
+    input[type="date"], input[type="time"], select {
+      padding:10px 12px; border-radius:8px; border:1px solid #d0d7df; font-size:14px;
+    }
+
+    .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:14px; }
+    .btn-ghost { padding:8px 12px; border-radius:8px; background:#f2f4f6; border:none; cursor:pointer; }
+    .btn-primary { padding:10px 14px; background:var(--azul-oscuro); color:white; border:none; border-radius:8px; cursor:pointer; }
+
+    /* Tabla dentro de modal */
+    table { width:100%; border-collapse: collapse; margin-top:12px; font-size:14px;}
+    th, td { padding:10px; border-bottom:1px solid #e6e9ed; text-align:left; }
+    thead th { background: var(--azul-oscuro); color:white; font-weight:700; }
+
+    /* responsive */
+    @media (max-width:860px){
+      .grid { grid-template-columns: 1fr; gap:16px; }
+      .modal-card { width: 92%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR -->
+  <header class="header">
+    <div class="left">
+      <h1>Administrador</h1>
+    </div>
+    <div class="menu">
+      <div class="menu-btn" title="Menú" onclick="toggleMenu()">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main">
+
+    <div class="logo-area">
+      <!-- Ajusta la ruta si tu logo está en otra carpeta -->
+      <img src="../assets/Logo.png" alt="Logo ChronosCode" />
+      <div class="brand"><span></span></div>
+    </div>
+
+    <div class="grid">
+      <div class="big-btn" id="btnResumen" title="Resumen asistencia">RESUMEN<br>ASISTENCIA</div>
+      <div class="big-btn" id="btnGestion" title="Gestion empleados">GESTION<br>EMPLEADOS</div>
+
+      <div class="big-btn" id="btnGenerar" title="Generar código dinámico">GENERAR<br>CODIGO</div>
+      <div class="big-btn" id="btnReportes" title="Reportes">REPORTES<br>semanales/mensuales</div>
+    </div>
+
+    <div class="bottom-band"></div>
+  </main>
+
+  <!-- MODAL: Crear Horario por rango -->
+  <div id="modalRango" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <h3>Asignar horario por rango</h3>
+
+      <div class="row">
+        <div class="col">
+          <label>Empleado</label>
+          <select id="selEmpleadoModal"><option>Cargando...</option></select>
+        </div>
+        <div class="col">
+          <label>Fecha inicio</label>
+          <input id="fechaInicio" type="date">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Fecha fin</label>
+          <input id="fechaFin" type="date">
+        </div>
+        <div class="col">
+          <label>Hora entrada</label>
+          <input id="horaEntrada" type="time">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Hora salida</label>
+          <input id="horaSalida" type="time">
+        </div>
+        <div class="col">
+          <label>&nbsp;</label>
+          <div style="display:flex; gap:8px;">
+            <button id="btnCerrarModal" class="btn-ghost">Cancelar</button>
+            <button id="btnGuardarRango" class="btn-primary">Guardar Horario</button>
+          </div>
+        </div>
+      </div>
+
+      <hr style="margin-top:14px;border:none;border-top:1px solid #eee" />
+
+      <h4 style="margin-top:10px;color:#444">Horarios asignados (preview)</h4>
+      <div style="max-height:220px;overflow:auto;">
+        <table id="tablaHorariosModal">
+          <thead>
+            <tr><th>ID</th><th>Empleado</th><th>Fecha</th><th>Entrada</th><th>Salida</th></tr>
+          </thead>
+          <tbody><tr><td colspan="5">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal mostrar código generado -->
+  <div id="modalCodigo" class="modal">
+    <div class="modal-card" style="width:420px;text-align:center">
+      <h3>Código generado</h3>
+      <div id="codigoBox" style="font-size:28px;font-weight:800; color:var(--azul-oscuro); padding:18px 0;"></div>
+      <div style="display:flex; justify-content:center; gap:10px;">
+        <button id="btnCerrarCodigo" class="btn-ghost">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===================== Helpers =====================
+    const backend = "http://localhost:3000";
+
+    function toggleMenu(){ /* placeholder: si quieres abrir menú */ console.log("menu"); }
+
+    // ===================== Cargar empleados para modal =====================
+    async function cargarEmpleadosModal(){
+      try {
+        const res = await fetch(backend + "/usuarios");
+        const arr = await res.json();
+        const sel = document.getElementById("selEmpleadoModal");
+        sel.innerHTML = arr.map(u => `<option value="${u.ID_Usuario}">${u.Nombre_Usuario} - ${u.Cargo_Usuario}</option>`).join("");
+      } catch (err) {
+        console.error("Error cargando empleados:", err);
+        document.getElementById("selEmpleadoModal").innerHTML = "<option>Error</option>";
+      }
+    }
+
+    // ===================== Abrir modal rango =====================
+    document.getElementById("btnGestion").addEventListener("click", async () => {
+      await cargarEmpleadosModal();
+      await cargarHorariosModal();
+      document.getElementById("modalRango").classList.add("active");
+    });
+
+    document.getElementById("btnCerrarModal").addEventListener("click", () => {
+      document.getElementById("modalRango").classList.remove("active");
+    });
+
+    // ===================== Guardar horario por rango (simple) =====================
+    document.getElementById("btnGuardarRango").addEventListener("click", async () => {
+      const idUsuario = document.getElementById("selEmpleadoModal").value;
+      const fechaInicio = document.getElementById("fechaInicio").value;
+      const fechaFin = document.getElementById("fechaFin").value;
+      const entrada = document.getElementById("horaEntrada").value;
+      const salida = document.getElementById("horaSalida").value;
+
+      if (!idUsuario || !fechaInicio || !fechaFin || !entrada || !salida) {
+        return alert("Completa todos los campos.");
+      }
+
+      if (fechaInicio > fechaFin) {
+        return alert("Fecha inicio no puede ser mayor que fecha fin.");
+      }
+
+      try {
+        const body = { idUsuario, fechaInicio, fechaFin, entrada, salida };
+        const res = await fetch(backend + "/crear-horario-rango", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || data.message || "Error al crear horario");
+
+        alert("Horario creado correctamente.");
+        await cargarHorariosModal();
+      } catch (err) {
+        console.error(err);
+        alert("Error guardando horario: " + (err.message || err));
+      }
+    });
+
+    // ===================== Cargar Horarios (preview en modal) =====================
+    async function cargarHorariosModal(){
+      try {
+        const res = await fetch(backend + "/horarios");
+        const arr = await res.json();
+        const tbody = document.querySelector("#tablaHorariosModal tbody");
+        if (!Array.isArray(arr) || arr.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5">No hay horarios</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = arr.map(h => `
+          <tr>
+            <td>${h.ID_Horario ?? ''}</td>
+            <td>${h.Nombre_Usuario ?? h.NombreEmpleado ?? ''}</td>
+            <td>${h.Fecha ?? ''}</td>
+            <td>${h.HoraEntrada ?? h.HoraEntrada}</td>
+            <td>${h.HoraSalida ?? h.HoraSalida}</td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        console.error("Error cargarHorariosModal:", err);
+        document.querySelector("#tablaHorariosModal tbody").innerHTML = `<tr><td colspan="5">Error cargando horarios</td></tr>`;
+      }
+    }
+
+    // ===================== Generar código dinámico =====================
+    document.getElementById("btnGenerar").addEventListener("click", async () => {
+      try {
+        const res = await fetch(backend + "/generar-codigo", { method: "POST" });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "error generando codigo");
+        // mostrar modal con código
+        document.getElementById("codigoBox").textContent = data.codigo ?? data.codigoGenerado ?? "";
+        document.getElementById("modalCodigo").classList.add("active");
+      } catch (err) {
+        console.error("Error generar código:", err);
+        alert("Error generando código dinámico");
+      }
+    });
+
+    document.getElementById("btnCerrarCodigo").addEventListener("click", () => {
+      document.getElementById("modalCodigo").classList.remove("active");
+    });
+
+    // ===================== Resumen / Reportes (placeholders) =====================
+    document.getElementById("btnResumen").addEventListener("click", () => {
+      alert("Funcionalidad de Resumen pendiente (puedo implementarla si quieres).");
+    });
+    document.getElementById("btnReportes").addEventListener("click", () => {
+      alert("Funcionalidad de Reportes pendiente (puedo implementarla si quieres).");
+    });
+
+    // ===================== Inicializar =====================
+    (function init(){
+      // nada extra por ahora; cargar empleados cuando abra modal
+    })();
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empleado</title>
+
+    <!-- TU CSS EXACTO -->
+    <style>
+        /* FONDO */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: white;
+        }
+
+        /* BARRA SUPERIOR */
+        .top-bar {
+            background: #0a3153;
+            color: white;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-icon div {
+            width: 35px;
+            height: 6px;
+            background: #89a1b6;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        /* CONTENIDO */
+        .container {
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* CAMPO DE CÓDIGO */
+        .codigo-wrapper input {
+            width: 70%;
+            padding: 15px;
+            font-size: 28px;
+            text-align: center;
+            border: 3px solid #d6d6d6;
+            border-radius: 50px;
+            margin: 20px 0 40px 0;
+            outline: none;
+            background: #f7f7f7;
+        }
+
+        /* BOTONES */
+        .botones {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            width: 260px;
+            padding: 18px;
+            font-size: 22px;
+            border-radius: 50px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .entrada { background: #43a047; }
+        .salida { background: #e53935; }
+
+        /* TÍTULO TABLA */
+        .titulo-historial {
+            text-align: left;
+            margin-left: 20px;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        /* TABLA */
+        .table-wrapper, table {
+            width: 100%;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table th {
+            background: #0a3153;
+            color: white;
+            padding: 12px;
+        }
+
+        table td {
+            padding: 10px;
+            border-bottom: 2px solid #ccc;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <header class="top-bar">
+        <span>Panel Empleado</span>
+        <div class="menu-icon">
+            <div></div><div></div><div></div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <div class="container">
+
+        <h2>Validar Código</h2>
+
+        <div class="codigo-wrapper">
+            <input type="number" id="codigoInput" placeholder="Ingrese el código">
+        </div>
+
+        <div class="botones">
+            <button class="btn entrada" onclick="registrarEntrada()">Registrar Entrada</button>
+            <button class="btn salida" onclick="registrarSalida()">Registrar Salida</button>
+        </div>
+
+        <h3 class="titulo-historial">Historial de Asistencias</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaAsistencias"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ==============================
+         JS COMPLETO EN EL MISMO ARCHIVO
+         ============================== -->
+    <script>
+        const backend = "http://localhost:3000";
+        const idUsuario = localStorage.getItem("usuarioID");
+
+        if (!idUsuario) {
+            alert("No se encontró el usuario. Inicia sesión nuevamente.");
+            window.location.href = "Login.html";
+        }
+
+        // --------------------------
+        // VALIDAR CÓDIGO
+        // --------------------------
+        async function validarCodigo() {
+            const codigo = document.getElementById("codigoInput").value;
+
+            const res = await fetch(backend + "/validar-codigo", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ codigo })
+            });
+
+            const data = await res.json();
+            return data.valido;
+        }
+
+        // --------------------------
+        // REGISTRAR ENTRADA
+        // --------------------------
+        async function registrarEntrada() {
+            const valido = await validarCodigo();
+            if (!valido) return alert("Código incorrecto");
+
+            const ahora = new Date();
+            const fecha = ahora.toISOString().slice(0, 10);
+            const hora   = ahora.toTimeString().slice(0, 8);
+
+            const res = await fetch(backend + "/asistencias", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    tipo: "entrada",
+                    fecha,
+                    hora,
+                    idUsuario
+                })
+            });
+
+            const data = await res.json();
+            alert(data.mensaje);
+            cargarAsistencias();
+        }
+
+        // --------------------------
+        // REGISTRAR SALIDA
+        // --------------------------
+        async function registrarSalida() {
+            const valido = await validarCodigo();
+            if (!valido) return alert("Código incorrecto");
+
+            const ahora = new Date();
+            const fecha = ahora.toISOString().slice(0, 10);
+            const hora   = ahora.toTimeString().slice(0, 8);
+
+            const res = await fetch(backend + "/asistencias", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    tipo: "salida",
+                    fecha,
+                    hora,
+                    idUsuario
+                })
+            });
+
+            const data = await res.json();
+            alert(data.mensaje);
+            cargarAsistencias();
+        }
+
+        // --------------------------
+        // CARGAR ASISTENCIAS
+        // --------------------------
+        async function cargarAsistencias() {
+            const res = await fetch(backend + "/asistencias/" + idUsuario);
+            const lista = await res.json();
+
+            let html = "";
+
+            lista.forEach(a => {
+                html += `
+                    <tr>
+                        <td>${a.Fecha_Asistencia.slice(0,10)}</td>
+                        <td>${a.Hora_Entrada_Asistencia || "-"}</td>
+                        <td>${a.Hora_Salida_Asistencia || "-"}</td>
+                        <td>${a.Estado_Asistencia}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("tablaAsistencias").innerHTML = html;
+        }
+
+        cargarAsistencias();
+    </script>
+</body>
+</html>

@@ -2,106 +2,91 @@
 <html lang="es">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChronosCode Login</title>
-    <link rel="stylesheet" href="../CSS/style.css" />
+    <link rel="stylesheet "  href="../CSS/style.css">
 </head>
 
 <body>
+
     <div class="container">
         <div class="login-box">
-            <img src="../assets/Logo.png" class="logo" alt="Logo">
-            <p class="subtitle">Control de horarios facil y seguro</p>
+            <div id="logo-header">
+                <img src="/modelado/assets/Logo.png" style="text-align: center;"  alt="Logo">
+            </div>
 
-            <!-- Nota: onsubmit llama a la función y le pasa el event -->
-            <form id="loginForm" onsubmit="validarLogin(event)">
-                <div class="input-box">
-                    <span class="icon">@</span>
-                    <input id="email" type="email" placeholder="Correo Electronico" required>
-                </div>
+            <h2>Iniciar Sesión</h2>
+
+            <form id="formLogin">
 
                 <div class="input-box">
-                    <span class="icon">*</span>
-                    <input id="password" type="password" placeholder="Contraseña" required>
+                    
+                    <input type="email" id="correo" placeholder="correo " required>
                 </div>
 
-                <div class="links">
-                    <a href="#">¿Olvidaste tu contraseña?</a>
-                    <span> | </span>
-                    <a href="Crear_Usuario1.html">Regístrate</a>
+                <div class="input-box">
+                    
+                    <input type="password" id="contraseña" placeholder="contraseña"   required>
                 </div>
 
-                <!-- Especifica type="submit" para que sea explícito -->
-                <button type="submit" class="btn">INGRESAR</button>
+                <button class="btn" type="submit">Ingresar</button>
             </form>
+
+            <p class="crear">
+                ¿No tienes cuenta?
+                <a href="Crear_Usuario1.html">Crear Usuario</a>
+            </p>
+
         </div>
     </div>
 
     <script>
-        // función global y asíncrona
-        async function validarLogin(event) {
-            event.preventDefault(); // evita recarga del form
-            console.log("validarLogin() invoked");
+document.getElementById("formLogin").addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-            const correo = document.getElementById("email").value.trim();
-            const contraseña = document.getElementById("password").value;
+    const datos = {
+        correo: document.getElementById("correo").value,
+        contraseña: document.getElementById("contraseña").value
+    };
 
-            console.log("Valores:", { correo, contraseñaLength: contraseña.length });
+    try {
+        const resp = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+        });
 
-            // Validaciones básicas
-            if (!correo || !contraseña) {
-                alert("Por favor completa correo y contraseña");
-                return;
-            }
+        const data = await resp.json();
+        console.log("Respuesta del servidor:", data);
 
-            try {
-                // Llama al endpoint de tu backend
-                const respuesta = await fetch("http://localhost:3000/login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ correo, contraseña })
-                });
-
-                console.log("fetch done, status:", respuesta.status);
-
-                const data = await respuesta.json().catch(() => ({}));
-                console.log("response body:", data);
-
-                if (!respuesta.ok) {
-                    // mostrar mensaje que venga del backend
-                    const mensaje = data.mensaje || data.error || "Error en el login";
-                    alert(mensaje);
-                    return;
-                }
-
-                // ======= GUARDAR ID EN LOCALSTORAGE =======
-                localStorage.setItem("idUsuarioLogueado", data.id);
-                console.log("ID guardado:", localStorage.getItem("idUsuarioLogueado"));
-
-
-                alert("Bienvenido ✔️");
-                // redirección según cargo
-                if (data.cargo === "Administrador") {
-                    window.location.href = "Administrador.html";
-                } else if (data.cargo === "Empleado") {
-                    window.location.href = "Empleado.html";
-                } else {
-                    // Si el backend devolvió lo necesario pero el cargo es distinto
-                    console.warn("Cargo no reconocido:", data.cargo);
-                    alert("Cargo no reconocido");
-                }
-            } catch (err) {
-                console.error("Error fetch/login:", err);
-                alert("No se pudo conectar con el servidor. Revisa la consola.");
-            }
+        if (!resp.ok) {
+            alert(data.mensaje || "Error en login");
+            return;
         }
 
-        // DEBUG: mostrar en consola si el DOM está listo
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("DOM listo - Login.HTML");
-        });
-    </script>
+        // 🔥 Guardar el ID CORRECTAMENTE
+        localStorage.setItem("usuarioID", data.id);
+        localStorage.setItem("usuarioCargo", data.cargo);
+        localStorage.setItem("usuarioNombre", data.nombre);
+
+        // Redirección según cargo
+        if (data.cargo === "Administrador") {
+            window.location.href = "Administrador.html";
+        } else if (data.cargo === "Empleado") {
+            window.location.href = "Empleado.html";
+        } else {
+            alert("Cargo no reconocido en el sistema");
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("No se pudo conectar al servidor");
+    }
+});
+</script>
+
+
 </body>
 
 </html>

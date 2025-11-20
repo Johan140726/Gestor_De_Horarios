@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Usuario</title>
 
-    <!-- Importar el CSS -->
     <link rel="stylesheet" href="../CSS/crear_usuario.css">
 </head>
 
@@ -71,8 +70,6 @@
 
                 if (respuesta.ok) {
                     alert("Usuario creado correctamente ✔️");
-
-                    // REDIRECCIÓN AL LOGIN (asegúrate de que el nombre es correcto)
                     window.location.href = "Login.html";
                 } else {
                     alert("Error: " + data.error);
